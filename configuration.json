@@ -1,15 +1,16 @@
 {
   "Version": "0.0",
-  "LogLevel": "Verbose",
+  "LogLevel": "Debug",
+  "TelemetryEnableTrace": false,
   "workaroundForQuerySOAPBugEnabled": false,
   "Source": {
     "$type": "TfsTeamProjectConfig",
-    "Collection": "https://dev.azure.com/nkdagility-preview/",
-    "Project": "migrationSource1",
+    "Collection": "https://dev.azure.com/",
+    "Project": "",
     "ReflectedWorkItemIDFieldName": "Custom.ReflectedWorkItemId",
     "AuthenticationMode": "AccessToken",
     "AllowCrossProjectLinking": false,
-    "PersonalAccessToken": "rrsne75npwj5ctn5vm337nrxiqlvdkfmcbkqrubl6ushts6syi5a",
+    "PersonalAccessToken": "",
     "LanguageMaps": {
       "AreaPath": "Area",
       "IterationPath": "Iteration"
@@ -17,12 +18,12 @@
   },
   "Target": {
     "$type": "TfsTeamProjectConfig",
-    "Collection": "https://dev.azure.com/nkdagility-preview/",
-    "Project": "migration Target 1",
-    "ReflectedWorkItemIDFieldName": "nkdScrum.ReflectedWorkItemId",
+    "Collection": "https://dev.azure.com/",
+    "Project": "",
+    "ReflectedWorkItemIDFieldName": "Custom.ReflectedWorkItemId",
     "AuthenticationMode": "AccessToken",
     "AllowCrossProjectLinking": false,
-    "PersonalAccessToken": "rrsne75npwj5ctn5vm337nrxiqlvdkfmcbkqrubl6ushts6syi5a",
+    "PersonalAccessToken": "",
     "LanguageMaps": {
       "AreaPath": "Area",
       "IterationPath": "Iteration"
@@ -30,14 +31,25 @@
   },
   "FieldMaps": [
     {
-      "$type": "TreeToTagMapConfig",
+      "$type": "FieldValueMapConfig",
       "WorkItemTypeName": "*",
-      "toSkip": 3,
-      "timeTravel": 1
+      "sourceField": "System.State",
+      "targetField": "System.State",
+      "defaultValue": "To Do",
+      "valueMapping": {
+        "Approved": "In Progress",
+        "New": "To Do",
+        "Committed": "In Progress",
+        "In Progress": "In Progress",
+        "To Do": "To Do",
+        "Done": "Done",
+        "Removed": "Removed",
+        "In UAT": "In Progress"
+      }
     }
   ],
   "WorkItemTypeDefinition": {
-    "sourceWorkItemTypeName": "targetWorkItemTypeName"
+    "User Story": "Product Backlog Item"
   },
   "GitRepoMapping": null,
   "CommonEnrichersConfig": [
@@ -51,12 +63,23 @@
     }
   ],
   "Processors": [
-    //{
-    //  "$type": "WorkItemDeleteConfig",
-    //  "Enabled": true,
-    //  "WIQLQueryBit": "AND [System.WorkItemType] NOT IN ('Test Suite', 'Test Plan')",
-    //  "WIQLOrderBit": "[System.ChangedDate] desc"
-    //},
+    {
+      "$type": "AzureDevOpsPipelineProcessorOptions",
+      "Enabled": false,
+      "MigrateBuildPipelines": true,
+      "MigrateReleasePipelines": false,
+      "MigrateTaskGroups": true,
+      "MigrateVariableGroups": true,
+      "MigrateServiceConnections": true,
+      "BuildPipelines": null,
+      "ReleasePipelines": null,
+      "RefName": null,
+      "SourceName": "Source",
+      "TargetName": "Target",
+      "RepositoryNameMaps": {
+        "demo":  "my-newer-demo"
+      }
+    },
     {
       "$type": "WorkItemMigrationConfig",
       "Enabled": true,
@@ -77,11 +100,11 @@
       "AttachmentMaxSize": 480000000,
       "AttachRevisionHistory": false,
       "LinkMigrationSaveEachAsAdded": false,
-      "GenerateMigrationComment": true,
+      "GenerateMigrationComment": false,
       "WorkItemIDs": null,
       "MaxRevisions": 0,
       "NodeStructureEnricherEnabled": true,
-      "UseCommonNodeStructureEnricherConfig": true,
+      "UseCommonNodeStructureEnricherConfig": false,
       "StopMigrationOnMissingAreaIterationNodes": false,
       "NodeBasePaths": [],
       "AreaMaps": {},
@@ -89,5 +112,27 @@
       "MaxGracefulFailures": 0
     }
 
-  ]
+  ],
+  "Endpoints": {
+    "AzureDevOpsEndpoints": [
+      {
+        "name": "Source",
+        "$type": "AzureDevOpsEndpointOptions",
+        "Organisation": "https://dev.azure.com/",
+        "Project": "",
+        "AuthenticationMode": "AccessToken",
+        "AccessToken": "",
+        "EndpointEnrichers": null
+      },
+      {
+        "Name": "Target",
+        "$type": "AzureDevOpsEndpointOptions",
+        "Organisation": "https://dev.azure.com/",
+        "Project": "",
+        "AuthenticationMode": "AccessToken",
+        "AccessToken": "",
+        "EndpointEnrichers": null
+      }
+    ]
+  }
 }
