@@ -5,12 +5,12 @@
   "workaroundForQuerySOAPBugEnabled": false,
   "Source": {
     "$type": "TfsTeamProjectConfig",
-    "Collection": "https://dev.azure.com/",
-    "Project": "",
+    "Collection": "https://dev.azure.com/org1",
+    "Project": "project1",
     "ReflectedWorkItemIDFieldName": "Custom.ReflectedWorkItemId",
     "AuthenticationMode": "AccessToken",
     "AllowCrossProjectLinking": false,
-    "PersonalAccessToken": "",
+    "PersonalAccessToken": "PAT",
     "LanguageMaps": {
       "AreaPath": "Area",
       "IterationPath": "Iteration"
@@ -18,12 +18,12 @@
   },
   "Target": {
     "$type": "TfsTeamProjectConfig",
-    "Collection": "https://dev.azure.com/",
-    "Project": "",
+    "Collection": "https://dev.azure.com/org2",
+    "Project": "project2",
     "ReflectedWorkItemIDFieldName": "Custom.ReflectedWorkItemId",
     "AuthenticationMode": "AccessToken",
     "AllowCrossProjectLinking": false,
-    "PersonalAccessToken": "",
+    "PersonalAccessToken": "PAT",
     "LanguageMaps": {
       "AreaPath": "Area",
       "IterationPath": "Iteration"
@@ -32,19 +32,32 @@
   "FieldMaps": [
     {
       "$type": "FieldValueMapConfig",
+      "WorkItemTypeName": "User Story",
+      "sourceField": "System.State",
+      "targetField": "System.State",
+      "defaultValue": "To Do",
+      "valueMapping": {
+        "Active": "Approved",
+        "New": "New",
+        "Resolved": "Done",
+        "Closed": "Done",
+        "Removed": "Removed",
+        "In UAT": "Committed"
+      }
+    },
+    {
+      "$type": "FieldValueMapConfig",
       "WorkItemTypeName": "*",
       "sourceField": "System.State",
       "targetField": "System.State",
       "defaultValue": "To Do",
       "valueMapping": {
-        "Approved": "In Progress",
-        "New": "To Do",
-        "Committed": "In Progress",
-        "In Progress": "In Progress",
-        "To Do": "To Do",
-        "Done": "Done",
+        "Active": "Active",
+        "New": "New",
+        "Resolved": "Resolved",
+        "Closed": "Closed",
         "Removed": "Removed",
-        "In UAT": "In Progress"
+        "In UAT": "In UAT"
       }
     }
   ],
@@ -77,7 +90,7 @@
       "SourceName": "Source",
       "TargetName": "Target",
       "RepositoryNameMaps": {
-        "demo":  "my-newer-demo"
+        "project1":  "project2"
       }
     },
     {
@@ -118,19 +131,19 @@
       {
         "name": "Source",
         "$type": "AzureDevOpsEndpointOptions",
-        "Organisation": "https://dev.azure.com/",
-        "Project": "",
+        "Organisation": "https://dev.azure.com/org1",
+        "Project": "project1",
         "AuthenticationMode": "AccessToken",
-        "AccessToken": "",
+        "AccessToken": "PAT",
         "EndpointEnrichers": null
       },
       {
         "Name": "Target",
         "$type": "AzureDevOpsEndpointOptions",
-        "Organisation": "https://dev.azure.com/",
-        "Project": "",
+        "Organisation": "https://dev.azure.com/org2",
+        "Project": "project2",
         "AuthenticationMode": "AccessToken",
-        "AccessToken": "",
+        "AccessToken": "PAT",
         "EndpointEnrichers": null
       }
     ]
